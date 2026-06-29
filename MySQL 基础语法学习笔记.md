@@ -6,24 +6,26 @@
 
 SQL（Structured Query Language）用来和关系型数据库交互。关键字通常大写，其他小写。
 
-| 分类 | 全称 | 说明 | 关键字 |
-|------|------|------|--------|
-| DDL | Data Definition Language | 数据定义语言 | `CREATE`、`DROP`、`ALTER`、`TRUNCATE` |
-| DML | Data Manipulation Language | 数据操作语言 | `INSERT`、`UPDATE`、`DELETE`、`CALL` |
-| DQL | Data Query Language | 数据查询语言（DML子集） | `SELECT` |
-| DCL | Data Control Language | 数据控制语言 | `GRANT`、`REVOKE` |
+| 分类  | 全称                         | 说明            | 关键字                                |
+| --- | -------------------------- | ------------- | ---------------------------------- |
+| DDL | Data Definition Language   | 数据定义语言        | `CREATE`、`DROP`、`ALTER`、`TRUNCATE` |
+| DML | Data Manipulation Language | 数据操作语言        | `INSERT`、`UPDATE`、`DELETE`、`CALL`  |
+| DQL | Data Query Language        | 数据查询语言（DML子集） | `SELECT`                           |
+| DCL | Data Control Language      | 数据控制语言        | `GRANT`、`REVOKE`                   |
 
 ---
 
 ## 二、常用命令
 
 ### 创建数据库
+
 ```sql
 CREATE DATABASE test_db;
 USE test_db;
 ```
 
 ### 创建表
+
 ```sql
 CREATE TABLE player (
     id INT,
@@ -35,11 +37,13 @@ CREATE TABLE player (
 ```
 
 ### 查看表结构
+
 ```sql
 DESC player;
 ```
 
 ### 修改表结构
+
 ```sql
 ALTER TABLE player MODIFY COLUMN name VARCHAR(200);
 ALTER TABLE player RENAME COLUMN name TO nick_name;
@@ -48,6 +52,7 @@ ALTER TABLE player DROP COLUMN last_login;
 ```
 
 ### 删除表
+
 ```sql
 DROP TABLE player;
 ```
@@ -57,6 +62,7 @@ DROP TABLE player;
 ## 三、数据的增删改查
 
 ### 插入（INSERT）
+
 ```sql
 -- 指定列名插入
 INSERT INTO player (id, name, level, exp, gold) 
@@ -71,12 +77,14 @@ INSERT INTO player VALUES (1, '张三', 1, 1, 1);
 ```
 
 ### 查询（SELECT）
+
 ```sql
 SELECT * FROM player;           -- 查所有列
 SELECT id, name FROM player;    -- 查指定列
 ```
 
 ### 更新（UPDATE）
+
 ```sql
 UPDATE player SET level = 2 WHERE name = '张三';
 -- ⚠️ 注意：没有 WHERE 会更新全部记录！
@@ -84,12 +92,14 @@ UPDATE player SET level = 2 WHERE name = '张三';
 ```
 
 ### 删除（DELETE）
+
 ```sql
 DELETE FROM player WHERE gold = 0;
 -- ⚠️ 注意：没有 WHERE 会删除全部记录！
 ```
 
 ### 设置默认值
+
 ```sql
 ALTER TABLE player MODIFY level INT DEFAULT 1;
 
@@ -132,6 +142,7 @@ mysqldump -u root -p mydatabase | gzip > mydatabase_backup.sql.gz
 ```
 
 **参数说明：**
+
 - `--single-transaction`：创建一致性快照，不锁表（InnoDB）
 - `--routines`：导出存储过程和函数
 - `--triggers`：导出触发器
@@ -153,6 +164,7 @@ gunzip < mydatabase_backup.sql.gz | mysql -u root -p new_database
 ```
 
 **⚠️ 注意：** 导入前目标数据库通常需先手动创建：
+
 ```sql
 CREATE DATABASE new_database 
   CHARACTER SET utf8mb4 
@@ -165,14 +177,14 @@ CREATE DATABASE new_database
 
 ### 约束类型总览
 
-| 约束名 | 关键字 | 作用 |
-|--------|--------|------|
-| 主键约束 | `PRIMARY KEY` | 唯一标识一行，非空且唯一 |
-| 非空约束 | `NOT NULL` | 该列值不能为 NULL |
-| 唯一约束 | `UNIQUE` | 该列值不能重复（允许多个 NULL） |
-| 默认值约束 | `DEFAULT` | 插入时未指定值则使用默认值 |
-| 检查约束 | `CHECK` | 值必须满足指定条件（MySQL 8.0.16+） |
-| 外键约束 | `FOREIGN KEY` | 关联另一张表，保证引用完整性 |
+| 约束名   | 关键字           | 作用                       |
+| ----- | ------------- | ------------------------ |
+| 主键约束  | `PRIMARY KEY` | 唯一标识一行，非空且唯一             |
+| 非空约束  | `NOT NULL`    | 该列值不能为 NULL              |
+| 唯一约束  | `UNIQUE`      | 该列值不能重复（允许多个 NULL）       |
+| 默认值约束 | `DEFAULT`     | 插入时未指定值则使用默认值            |
+| 检查约束  | `CHECK`       | 值必须满足指定条件（MySQL 8.0.16+） |
+| 外键约束  | `FOREIGN KEY` | 关联另一张表，保证引用完整性           |
 
 ### 完整建表示例
 
@@ -228,6 +240,7 @@ CREATE TABLE employees (
 ```
 
 **外键行为说明：**
+
 - `ON DELETE SET NULL`：主表记录删除时，从表关联字段设为 NULL（要求该列允许 NULL）
 - `ON UPDATE CASCADE`：主表 ID 更新时，从表关联字段自动级联更新
 
@@ -299,13 +312,13 @@ SELECT * FROM player ORDER BY 5 DESC;
 
 ### 聚合函数
 
-| 函数 | 作用 |
-|------|------|
+| 函数         | 作用   |
+| ---------- | ---- |
 | `COUNT(*)` | 统计行数 |
-| `AVG(col)` | 平均值 |
-| `MAX(col)` | 最大值 |
-| `MIN(col)` | 最小值 |
-| `SUM(col)` | 求和 |
+| `AVG(col)` | 平均值  |
+| `MAX(col)` | 最大值  |
+| `MIN(col)` | 最小值  |
+| `SUM(col)` | 求和   |
 
 ```sql
 SELECT COUNT(*) FROM player;
@@ -345,12 +358,12 @@ SELECT DISTINCT name FROM player;
 
 ## 七、集合运算
 
-| 运算 | 关键字 | 说明 |
-|------|--------|------|
-| 并集（去重） | `UNION` | 合并结果，自动去重 |
-| 并集（不去重） | `UNION ALL` | 合并结果，保留重复 |
-| 交集 | `INTERSECT` | 两个结果集的交集 |
-| 差集 | `EXCEPT` | 第一个结果集减去第二个 |
+| 运算      | 关键字         | 说明          |
+| ------- | ----------- | ----------- |
+| 并集（去重）  | `UNION`     | 合并结果，自动去重   |
+| 并集（不去重） | `UNION ALL` | 合并结果，保留重复   |
+| 交集      | `INTERSECT` | 两个结果集的交集    |
+| 差集      | `EXCEPT`    | 第一个结果集减去第二个 |
 
 ```sql
 SELECT * FROM player WHERE level BETWEEN 1 AND 3
@@ -390,6 +403,7 @@ SELECT EXISTS(SELECT * FROM player WHERE level > 100);
 ## 九、表关联（JOIN）
 
 ### 内连接（INNER JOIN）
+
 返回两表都匹配的数据：
 
 ```sql
@@ -407,6 +421,7 @@ WHERE p.id = e.player_id;
 ```
 
 ### 左连接（LEFT JOIN）
+
 返回左表全部数据 + 右表匹配数据（不匹配的填 NULL）：
 
 ```sql
@@ -415,6 +430,7 @@ LEFT JOIN equip ON player.id = equip.player_id;
 ```
 
 ### 右连接（RIGHT JOIN）
+
 返回右表全部数据 + 左表匹配数据：
 
 ```sql
@@ -423,6 +439,7 @@ RIGHT JOIN equip ON player.id = equip.player_id;
 ```
 
 ### 笛卡尔积
+
 两表所有行的组合（去掉连接条件就会出现）：
 
 ```sql
@@ -451,6 +468,7 @@ DROP INDEX index_name ON tbl_name;
 ```
 
 **最佳实践：**
+
 - 对主键自动创建索引（主键索引）
 - 对经常出现在 `WHERE`、`JOIN` 后的列创建索引
 - 不要过度创建索引（影响插入/更新性能）
@@ -488,6 +506,7 @@ DROP VIEW view_name;
 1. 查询名字以"宫本"开头的玩家
 2. 查询名字以"李"结尾的玩家
 3. 统计各个姓氏的玩家数量，按数量降序排列，只显示数量 ≥ 5 的姓氏
+   
    ```sql
    SELECT SUBSTR(name, 1, 1), COUNT(SUBSTR(name, 1, 1)) 
    FROM player 
@@ -495,7 +514,3 @@ DROP VIEW view_name;
    HAVING COUNT(SUBSTR(name, 1, 1)) >= 5
    ORDER BY COUNT(SUBSTR(name, 1, 1)) DESC;
    ```
-
----
-
-*笔记整理自《两个MC开发者的浅显思考》系列教程，原文更新于 2025-11-08*
